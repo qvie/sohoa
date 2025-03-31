@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm kiếm tài liệu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="text-center">Tìm Kiếm Tài Liệu</h2>
+
+    <!-- Form tìm kiếm -->
+    <form action="/search" method="get" class="mb-4">
+        <!-- Nhập từ khóa tìm kiếm -->
+        <input type="text" name="q" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." value="{{ query }}">
+
+        <!-- Dropdown chọn danh mục -->
+        <select name="category" class="form-control mt-2">
+            <option value="">Chọn danh mục</option>
+            <option value="Invoice" {% if category == 'Invoice' %} selected {% endif %}>Invoice</option>
+            <option value="Contract" {% if category == 'Contract' %} selected {% endif %}>Contract</option>
+        </select>
+
+        <!-- Nhập tên người tải lên -->
+        <label class="mt-2">Nhập tên người tải lên:</label>
+        <input type="text" name="uploaded_by" class="form-control" placeholder="Nhập tên người tải lên..." value="{{ uploaded_by }}">
+
+        <!-- Bộ lọc ngày tải lên -->
+        <label class="mt-2">Từ ngày:</label>
+        <input type="date" name="from_date" class="form-control" value="{{ from_date }}">
+
+        <label class="mt-2">Đến ngày:</label>
+        <input type="date" name="to_date" class="form-control" value="{{ to_date }}">
+
+        <!-- Tìm kiếm theo passcode -->
+        <label class="mt-2">Nhập passcode tìm kiếm (nếu có):</label>
+        <input type="text" name="passcode" class="form-control" placeholder="Nhập passcode" value="{{ passcode }}">
+
+        <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
+    </form>
+
+    <!-- Hiển thị kết quả tìm kiếm -->
+    {% if documents %}
+    <h3>Kết quả tìm kiếm cho "{{ query }}"</h3>
+    
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên tài liệu</th>
+                <th>Danh mục</th>
+                <th>Nội dung OCR</th>
+                <th>Ngày tải lên</th>
+                <th>Người tải lên</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in documents %}
+            <tr>
+                <td>{{ doc[0] }}</td>
+                <td>{{ doc[1] }}</td>
+                <td>{{ doc[2] }}</td>
+                <td>{{ doc[3][:100] }}...</td>  <!-- Hiển thị 100 ký tự đầu tiên của nội dung OCR -->
+                <td>{{ doc[5] }}</td>  <!-- Ngày tải lên -->
+                <td>{{ doc[4] }}</td>  <!-- Người tải lên -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <p>Không tìm thấy tài liệu nào cho "{{ query }}".</p>
+    {% endif %}
+
+    <a href="/" class="btn btn-secondary mt-3">Quay lại</a>
+</div>
+</body>
+</html>

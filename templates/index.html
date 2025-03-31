@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Tài Liệu OCR</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(45deg,rgb(6, 87, 121),rgb(3, 31, 54)); /* Gradient nền đẹp */
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h4 {
+            color: #3f4a56;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            color: #2980b9; /* Màu xanh sáng */
+            letter-spacing: 1px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control, .form-select {
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .btn {
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn-primary:hover {
+            background-color: #21618c;
+            border-color: #1d5677;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+        .btn-outline-danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-outline-danger:hover {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .form-control::placeholder {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .mt-4 {
+            margin-top: 2rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem !important;
+        }
+
+        .text-center {
+            color: #333;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .form-control, .form-select {
+                font-size: 14px;
+            }
+
+            .btn {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="text-center">Hệ Thống Quản Lý Tài Liệu OCR</h2>
+
+    <!-- 🔍 Thanh tìm kiếm tài liệu -->
+    <form method="GET" action="/search" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." value="{{ query }}" required>
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <h4 class="mt-4">Tải lên tài liệu mới:</h4>
+    <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="image" class="form-label">Chọn hình ảnh tài liệu:</label>
+            <input type="file" name="image" required class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="uploaded_by" class="form-label">Người tải lên:</label>
+            <input type="text" name="uploaded_by" class="form-control" placeholder="Nhập tên của bạn..." value="{{ uploaded_by }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Chọn danh mục:</label>
+            <select name="category" class="form-select">
+                <option value="Invoice" {% if category == 'Invoice' %} selected {% endif %}>Hóa đơn</option>
+                <option value="Contract" {% if category == 'Contract' %} selected {% endif %}>Hợp đồng</option>
+                <option value="Report" {% if category == 'Report' %} selected {% endif %}>Báo cáo</option>
+                <option value="ID Document" {% if category == 'ID Document' %} selected {% endif %}>Giấy tờ tùy thân</option>
+                <option value="Other" {% if category == 'Other' %} selected {% endif %}>Khác</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Tải lên</button>
+    </form>
+
+    <h4 class="mt-4">Chuyển văn bản thành ảnh:</h4>
+    <form action="/text-to-image" method="post">
+        <textarea name="text" rows="5" class="form-control" placeholder="Nhập nội dung cần chuyển đổi...">{{ text }}</textarea>
+        <button type="submit" class="btn btn-info mt-2">Chuyển thành ảnh</button>
+    </form>
+</div>
+</body>
+</html>
